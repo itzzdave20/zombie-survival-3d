@@ -3,8 +3,6 @@ workflows:
     name: Zombie Survival 3D - Android
     max_build_duration: 60
     environment:
-      android_signing:
-        - keystore
       groups:
         - google_play
     triggering:
