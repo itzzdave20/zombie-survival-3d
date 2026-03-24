@@ -1,0 +1,33 @@
+workflows:
+  android-workflow:
+    name: Zombie Survival 3D - Android
+    max_build_duration: 60
+    environment:
+      android_signing:
+        - keystore
+      groups:
+        - google_play
+    triggering:
+      events:
+        - push
+        - tag
+      branch_patterns:
+        - pattern: 'main'
+          include: true
+          source: true
+    scripts:
+      - name: Install Python dependencies
+        script: |
+          pip3 install buildozer cython==3.0.8 Pillow
+      - name: Build Android APK
+        script: |
+          buildozer android debug
+    artifacts:
+      - bin/*.apk
+    publishing:
+      email:
+        recipients:
+          - daveguibejar@gmail.com
+        notify:
+          success: true
+          failure: true
