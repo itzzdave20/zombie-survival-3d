@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-20.04
 
     steps:
       - uses: actions/checkout@v4
@@ -39,7 +39,8 @@ jobs:
             openjdk-17-jdk \
             autoconf \
             automake \
-            cmake
+            cmake \
+            libssl-dev
 
       - name: Install Python dependencies
         run: |
@@ -53,7 +54,8 @@ jobs:
 
       - name: Build APK
         run: |
-          buildozer android debug
+          # Answer yes to all prompts
+          yes | buildozer android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
