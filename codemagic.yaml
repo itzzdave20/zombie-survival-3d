@@ -16,9 +16,12 @@ workflows:
           include: true
           source: true
     scripts:
+      - name: Install system dependencies
+        script: |
+          brew install automake
+          brew install openssl@1.1 || brew install openssl
       - name: Set up Python 3.11
         script: |
-          # Use pyenv to switch to Python 3.11
           export PYENV_ROOT="$HOME/.pyenv"
           export PATH="$PYENV_ROOT/bin:$PATH"
           eval "$(pyenv init --path)"
