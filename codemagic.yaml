@@ -3,10 +3,8 @@ workflows:
     name: Zombie Survival 3D - Android
     max_build_duration: 60
     environment:
-      groups:
-        - google_play
-      xcode: latest
-      cocoapods: default
+      vars:
+        PYTHON_VERSION: "3.11"
     triggering:
       events:
         - push
@@ -16,14 +14,9 @@ workflows:
           include: true
           source: true
     scripts:
-      - name: Install Python dependencies
+      - name: Install buildozer
         script: |
           pip3 install buildozer cython==3.0.8 Pillow
-          pip3 install --upgrade git+https://github.com/kivy/python-for-android.git
-      - name: Patch python-for-android
-        script: |
-          P4A_PATH=$(python3 -c "import pythonforandroid; print(pythonforandroid.__path__[0])")
-          sed -i '' 's/if self.ask_to_install():/if False and self.ask_to_install():/g' "$P4A_PATH/prerequisites.py" || true
       - name: Build Android APK
         script: |
           buildozer android debug
