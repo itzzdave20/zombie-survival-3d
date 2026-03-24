@@ -5,7 +5,8 @@ workflows:
     environment:
       groups:
         - google_play
-      python: 3.11
+      xcode: latest
+      cocoapods: default
     triggering:
       events:
         - push
@@ -15,6 +16,15 @@ workflows:
           include: true
           source: true
     scripts:
+      - name: Set up Python 3.11
+        script: |
+          # Use pyenv to switch to Python 3.11
+          export PYENV_ROOT="$HOME/.pyenv"
+          export PATH="$PYENV_ROOT/bin:$PATH"
+          eval "$(pyenv init --path)"
+          pyenv install 3.11.8 || true
+          pyenv global 3.11.8
+          python --version
       - name: Install Python dependencies
         script: |
           pip3 install buildozer cython==3.0.8 Pillow setuptools
