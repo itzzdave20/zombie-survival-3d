@@ -19,7 +19,10 @@ workflows:
       - name: Install system dependencies
         script: |
           brew install automake
-          brew install openssl@1.1 || brew install openssl
+          brew install openssl || true
+          # Create symlink for openssl@1.1 compatibility
+          ln -sf $(brew --prefix openssl)/lib/libcrypto.dylib /usr/local/lib/libcrypto.so.1.1 || true
+          ln -sf $(brew --prefix openssl)/lib/libssl.dylib /usr/local/lib/libssl.so.1.1 || true
       - name: Set up Python 3.11
         script: |
           export PYENV_ROOT="$HOME/.pyenv"
@@ -33,7 +36,8 @@ workflows:
           pip3 install buildozer cython==3.0.8 Pillow setuptools
       - name: Build Android APK
         script: |
-          buildozer android debug
+          # Auto-answer yes to prerequisite installation
+          echo "y" | buildozer android debug
     artifacts:
       - bin/*.apk
     publishing:
