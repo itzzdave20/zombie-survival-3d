@@ -5,6 +5,7 @@ workflows:
     environment:
       groups:
         - google_play
+      python: 3.11
     triggering:
       events:
         - push
@@ -16,7 +17,7 @@ workflows:
     scripts:
       - name: Install Python dependencies
         script: |
-          pip3 install buildozer cython==3.0.8 Pillow
+          pip3 install buildozer cython==3.0.8 Pillow setuptools
       - name: Build Android APK
         script: |
           buildozer android debug
