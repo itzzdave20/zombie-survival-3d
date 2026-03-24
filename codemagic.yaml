@@ -16,27 +16,12 @@ workflows:
           include: true
           source: true
     scripts:
-      - name: Install system dependencies
-        script: |
-          brew install automake
-          brew install openssl || true
-          # Create symlink for openssl@1.1 compatibility
-          ln -sf $(brew --prefix openssl)/lib/libcrypto.dylib /usr/local/lib/libcrypto.so.1.1 || true
-          ln -sf $(brew --prefix openssl)/lib/libssl.dylib /usr/local/lib/libssl.so.1.1 || true
-      - name: Set up Python 3.11
-        script: |
-          export PYENV_ROOT="$HOME/.pyenv"
-          export PATH="$PYENV_ROOT/bin:$PATH"
-          eval "$(pyenv init --path)"
-          pyenv install 3.11.8 || true
-          pyenv global 3.11.8
-          python --version
       - name: Install Python dependencies
         script: |
-          pip3 install buildozer cython==3.0.8 Pillow setuptools
+          pip3 install buildozer cython==3.0.8 Pillow
+          pip3 install --upgrade git+https://github.com/kivy/python-for-android.git
       - name: Build Android APK
         script: |
-          # Auto-answer yes to prerequisite installation
           echo "y" | buildozer android debug
     artifacts:
       - bin/*.apk
