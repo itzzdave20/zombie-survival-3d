@@ -23,17 +23,18 @@ workflows:
           
           # Patch python-for-android to skip openssl check
           P4A_PATH=$(python3 -c "import pythonforandroid; print(pythonforandroid.__path__[0])")
-          cat > /tmp/patch.py << 'EOF'
-          import re
-          with open(f"{P4A_PATH}/prerequisites.py", "r") as f:
-              content = f.read()
-          # Disable openssl check
-          content = re.sub(r'class openssl\(prerequisite\):', 'class openssl(prerequisite):\n    darwin_formula = None  # Disabled', content)
-          content = re.sub(r'if self\.ask_to_install\(\):', 'if False and self.ask_to_install():', content)
-          with open(f"{P4A_PATH}/prerequisites.py", "w") as f:
-              f.write(content)
-          EOF
-          python3 /tmp/patch.py
+          python3 << EOF
+import re
+p4a_path = "${P4A_PATH}"
+with open(f"{p4a_path}/prerequisites.py", "r") as f:
+    content = f.read()
+# Disable openssl check
+content = re.sub(r'class openssl\(prerequisite\):', 'class openssl(prerequisite):\n    darwin_formula = None  # Disabled', content)
+content = re.sub(r'if self\.ask_to_install\(\):', 'if False and self.ask_to_install():', content)
+with open(f"{p4a_path}/prerequisites.py", "w") as f:
+    f.write(content)
+print("Patched successfully!")
+EOF
       - name: Build Android APK
         script: |
           buildozer android debug
